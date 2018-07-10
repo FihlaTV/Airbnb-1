@@ -5,8 +5,8 @@ function getConnection() {
     var connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: '#######',
-        database: 'airbnb',
+        password: 'Botshelo$123',
+        database: 'minderzbnb',
         port: 3306
 
     });
