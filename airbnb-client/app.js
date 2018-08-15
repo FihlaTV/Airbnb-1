@@ -80,18 +80,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-AWS.config = new AWS.Config();
-AWS.config.accessKeyId = "SomeAccessKey"
-AWS.config.secretAccessKey = "someSecretAccessKey";
-AWS.config.region = "us-west-2";
-AWS.config.apiVersions = {
-    "s3": "2006-03-01"
-};
-var s3 = new AWS.S3({/* ... */});
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+
+
+var s3 = new AWS.S3();
+
+const myBucket = 'minderz';
+
 var upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'projectcmpe273',
+        bucket: myBucket,
         contentType: multerS3.AUTO_CONTENT_TYPE,
         acl: 'public-read',
         metadata: function (req, file, cb) {
@@ -102,7 +104,7 @@ var upload = multer({
             console.log("WHat is the fieldname", file.originalname);
             console.log("length of file ", req.file);
 
-            imageColl.push("https://s3.amazonaws.com/projectcmpe273/" + file.originalname + "" + Date.now().toString() + "roomPhoto");
+            imageColl.push("https://s3.amazonaws.com/minderz/" + file.originalname + "" + Date.now().toString() + "roomPhoto");
             cb(null, file.originalname + "" + Date.now().toString() + "roomPhoto");
         }
     })
@@ -111,7 +113,7 @@ var upload = multer({
 var uploadProfilePic = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'projectcmpe273',
+        bucket: myBucket,
         contentType: multerS3.AUTO_CONTENT_TYPE,
         acl: 'public-read',
         metadata: function (req, file, cb) {
@@ -122,7 +124,7 @@ var uploadProfilePic = multer({
             console.log("WHat is the fieldname", file.originalname);
             console.log("length of file ", req.file);
             imageProfileColl = [];
-            imageProfileColl.push("https://s3.amazonaws.com/projectcmpe273/" + file.originalname + "" + Date.now().toString());
+            imageProfileColl.push("https://s3.amazonaws.com/minderz/" + file.originalname + "" + Date.now().toString());
             cb(null, file.originalname + "" + Date.now().toString());
         }
     })
@@ -142,7 +144,7 @@ var uploadReview = multer({
             console.log("WHat is the fieldname", file.originalname);
             console.log("length of file ", req.file);
             listReviewImages = [];
-            listReviewImages.push("https://s3.amazonaws.com/projectcmpe273/" + file.originalname + "" + Date.now().toString());
+            listReviewImages.push("https://s3.amazonaws.com/minderz/" + file.originalname + "" + Date.now().toString());
             cb(null, file.originalname + "" + Date.now().toString());
         }
     })
